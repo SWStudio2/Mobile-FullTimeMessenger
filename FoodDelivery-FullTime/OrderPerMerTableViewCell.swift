@@ -9,6 +9,11 @@
 import UIKit
 
 class OrderPerMerTableViewCell: UITableViewCell {
+    
+    @IBOutlet weak var menuNameLbl:UILabel!
+    @IBOutlet weak var menuNumLbl:UILabel!
+    @IBOutlet weak var menuPriceLbl:UILabel!
+    @IBOutlet weak var menuOptionLbl:UILabel!
 
     override func awakeFromNib() {
         super.awakeFromNib()

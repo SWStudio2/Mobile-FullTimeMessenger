@@ -1,6 +1,105 @@
 {
-    "type": "MultiPolygon",
-    "coordinates": [
-        
-    ]
+    "status":200,
+    "message":"Get data successfully",
+    "data":{
+        "orderId":1,
+        "customer":{
+            "cusId":1,
+            "cusName":"นิ้ง",
+            "cusContactNumber":"0869903668"
+        },
+        "orderAddress":"Chulalongkorn University",
+        "orderAddressLatitude":"13.730481",
+        "orderAddressLongtitude":"100.532721",
+        "order_created_datetime":"orderDatetime",
+        "orderDeliveryRate":10,
+        "orderTotalPrice":110,
+        "orderFoodPrice":100,
+        "orderDeliveryPrice":10,
+        "order_estimate_datetime":"2017-04-08 22:21:44",
+        "sequenceOrders":[
+                          {
+                          "sequenceId":1,
+                          "sequenceSort":1,
+                          "sequenceReceiveStatus":" ",
+                          "sequenceCookStatus":" ",
+                          "sequenceCookTime":14,
+                          "sequenceMerDistance":40,
+                          "merchants":{
+                          "merID":1,
+                          "merName":"โอชายะ สยาม",
+                          "merAddress":"47/33 ตลาดสามย่าน เขตพญาไท xxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",
+                          "merLatitude":"13.745660",
+                          "merLongtitude":"100.530299",
+                          "merContactNumber":"0869903668",
+                          "merOpenStatus":"",
+                          "cookingTime":10
+                          },
+                          "orderDetails":[
+                                          {
+                                          "orderDetailId":4,
+                                          "orderDetailAmount":1,
+                                          "orderRemark":"",
+                                          "menu":{
+                                          "menuId":1,
+                                          "menuName":"ชานม",
+                                          "menuPrice":40
+                                          },
+                                          "option":[
+                                                    {
+                                                    "optionId":1,
+                                                    "optionNeme":"เยลลี่",
+                                                    "optionPrice":10
+                                                    },
+                                                    {
+                                                    "optionId":2,
+                                                    "optionNeme":"เฉาก๊วย",
+                                                    "optionPrice":10
+                                                    }
+                                                    ]
+                                          },
+                                          {
+                                          "orderDetailId":5,
+                                          "orderDetailAmount":2,
+                                          "orderRemark":"",
+                                          "menu":{
+                                          "menuId":1,
+                                          "menuName":"ชาเขียว",
+                                          "menuPrice":40
+                                          }
+                                          }
+                                          ]
+                          },
+                          {
+                          "sequenceId":2,
+                          "sequenceSort":2,
+                          "sequenceReceiveStatus":" ",
+                          "sequenceCookStatus":" ",
+                          "sequenceCookTime":14,
+                          "sequenceMerDistance":50,
+                          "merchants":{
+                          "merID":2,
+                          "merName":"ส้มตำเจ๊แดง",
+                          "merAddress":"47/33 ตลาดสามย่าน เขตพญาไท xxxxx",
+                          "merLatitude":"13.744638",
+                          "merLongtitude":"100.5257969",
+                          "merContactNumber":"",
+                          "merOpenStatus":"",
+                          "cookingTime":15
+                          },
+                          "orderDetails":[
+                                          {
+                                          "orderDetailId":7,
+                                          "orderDetailAmount":1,
+                                          "orderRemark":"",
+                                          "menu":{
+                                          "menuId":5,
+                                          "menuName":"ส้มตำ",
+                                          "menuPrice":40
+                                          }
+                                          }
+                                          ]
+                          }
+                          ]
+    }
 }
