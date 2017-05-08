@@ -32,8 +32,8 @@ class NotiDetailViewController: UIViewController {
     @IBAction func acceptOrder(){
         
         let defaults = UserDefaults.standard
-        let fullId = defaults.value(forKey: FULLID_KEY) as! String
-        let  value1  = ["full_id" : Int.init(fullId) ,
+        let fullId = defaults.value(forKey: FULLID_KEY) as! Int
+        let  value1  = ["full_id" : fullId ,
                         "noti_id" : noti.noti_id,
                         "isAccept" : Y_FLAG] as [String : Any]
         

@@ -14,6 +14,7 @@ class StationViewController: UIViewController {
     
     @IBOutlet weak var stationNameLbl : UILabel!
     @IBOutlet weak var mapView:GMSMapView!
+    @IBOutlet weak var backBtn:UIButton!
     var station = BikeStation()
 
     override func viewDidLoad() {
@@ -30,7 +31,12 @@ class StationViewController: UIViewController {
     
     func setupView(){
         self.stationNameLbl.text = station.bike_station_name
-        
+        self.title = station.bike_station_name
+        self.backBtn.isHidden = true
+        if GlobalVariables.sharedManager.fullStatusId == MESSENGER_DELIVERIED_STATUS {
+            self.backBtn.isHidden = false
+        }
+    
     }
     
     func setupMap(){
@@ -50,10 +56,12 @@ class StationViewController: UIViewController {
     
     @IBAction func arrivedStation(){
         let defaults = UserDefaults.standard
-        let fullId = defaults.value(forKey: FULLID_KEY) as! String
+        let fullId = defaults.value(forKey: FULLID_KEY) as! Int
         let alert = UIAlertController(title: "รายงานจุดจอด", message: "คุณถึงจุดจอด \(station.bike_station_name) เรียบร้อยแล้ว?" , preferredStyle: UIAlertControllerStyle.alert)
+        
+        alert.addAction(UIAlertAction(title: "ยกเลิก", style: UIAlertActionStyle.default, handler: nil))
         alert.addAction(UIAlertAction(title: "ยืนยัน", style: UIAlertActionStyle.default, handler: { action in
-            Alamofire.request(BASEURL+BACKTOSTATION+fullId)
+            Alamofire.request(BASEURL+BACKTOSTATION+"\(fullId)")
                 .responseJSON { response in
                     print("Response \(response)")
                     if let jsonResult = response.result.value {
@@ -65,7 +73,6 @@ class StationViewController: UIViewController {
             
             
         }))
-        alert.addAction(UIAlertAction(title: "ยกเลิก", style: UIAlertActionStyle.default, handler: nil))
         self.present(alert, animated: true, completion: nil)
         
         

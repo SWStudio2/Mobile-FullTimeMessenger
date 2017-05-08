@@ -13,6 +13,8 @@ class GlobalVariables {
     var currentLocation :CLLocationCoordinate2D?
     var curOrder = Order()
     var curBikeStation = BikeStation()
+    var recommendBikeStation = BikeStation()
+    var fullStatusId = 0
     
     // Here is how you would get to it without there being a global collision of variables.
     // , or in other words, it is a globally accessable parameter that is specific to the

@@ -88,7 +88,7 @@ class OrderPerMerchantViewController: UIViewController {
         
         let value = ["mer_id": Int64.init((order?.merchant.merID)!),
                      "order_id": Int64.init(GlobalVariables.sharedManager.curOrder.order_id),
-                     "full_id" : Int64.init(defaults.value(forKey: FULLID_KEY) as! String),
+                     "full_id" : defaults.value(forKey: FULLID_KEY) as! Int,
                      "seqor_confirm_code" : self.confirmTxt.text] as [String : Any]
         
         

@@ -1,4 +1,4 @@
-//
+ //
 //  HomeViewController.swift
 //  FoodDelivery-FullTime
 //
@@ -18,6 +18,9 @@ class HomeViewController: BaseViewController, GMSMapViewDelegate {
     @IBOutlet weak var cusAddressLTxt : UITextView!
     @IBOutlet weak var orderNoLbl: UILabel!
     @IBOutlet weak var orderEstimateLbl: UILabel!
+    @IBOutlet weak var timeLbl: UILabel!
+    @IBOutlet weak var telBtn:UIButton!
+    @IBOutlet weak var arrivalBtn:UIButton!
     var merTotalPrice = 0.0
     var merDeliveryPrice = 0.0
     let locationManager = CLLocationManager()
@@ -27,34 +30,38 @@ class HomeViewController: BaseViewController, GMSMapViewDelegate {
     override func viewDidLoad() {
         super.viewDidLoad()
         self.tableView.delegate = self
-        self.getMapList()
         self.addSlideMenuButton()
         self.addMapMenuButton()
-        //self.addBasketAndPinMenuButton()
         self.navigationItem.setHidesBackButton(true, animated: false)
         locationManager.delegate = self
         locationManager.requestWhenInUseAuthorization()
         locationManager.desiredAccuracy = kCLLocationAccuracyBest
         locationManager.startUpdatingLocation()
-
+        self.tableView.isHidden = true
+        self.orderNoLbl.isHidden = true
+        self.telBtn.isHidden = true
+        self.orderEstimateLbl.isHidden = true
+        self.timeLbl.isHidden = true
+        self.telBtn.isHidden = true
+        self.arrivalBtn.isHidden = true
+        self.cusAddressLTxt.isHidden = true
+        self.cusNameLbl.isHidden = true
+        //order = GlobalVariables.sharedManager.curOrder
+        self.getMapList()
        
     }
     
     override func viewWillAppear(_ animated: Bool) {
-        order = GlobalVariables.sharedManager.curOrder
-        self.tableView.reloadData()
+        self.getMapList()
     }
+
     
     func getMapList(){
-     /*   if let path = Bundle.main.path(forResource: "assignment", ofType: "json")
-        {
-            if let jsonData = NSData (contentsOfFile: path)
-            {*/
         let defaults = UserDefaults.standard
-        let fullId = defaults.value(forKey: FULLID_KEY) as! String
+        let fullId = defaults.value(forKey: FULLID_KEY) as! Int
         
 
-        let URL = BASEURL+GETASSIGNMENT+fullId
+        let URL = BASEURL+GETASSIGNMENT+"\(fullId)"
         Alamofire.request(URL).responseJSON {
                 response in
                 print("Response \(response)")
@@ -68,9 +75,7 @@ class HomeViewController: BaseViewController, GMSMapViewDelegate {
                             GlobalVariables.sharedManager.curOrder = self.order!
                             self.order?.seqOrders = (self.order?.seqOrders.sorted { $0.seqor_sort < $1.seqor_sort })!
                             GlobalVariables.sharedManager.curBikeStation = BikeStation(json: stationDict)
-                            
-                            self.initValue()
-                            self.tableView.reloadData()
+                            self.prepareView()
                             
                         }
                     } catch let error {
@@ -81,25 +86,70 @@ class HomeViewController: BaseViewController, GMSMapViewDelegate {
         
     }
     
+    func prepareView(){
+        let defaults = UserDefaults.standard
+        if GlobalVariables.sharedManager.fullStatusId == MESSENGER_DELIVERIED_STATUS {
+            self.initValueForBackToStation()
+            
+        } else if GlobalVariables.sharedManager.fullStatusId == MESSENGER_STATION_STATUS {
+            self.initValueAvailable()
+        }else{
+            self.initValue()
+            
+        }
+        //self.tableView.reloadData()
+    }
+    
     func initValue(){
+        self.tableView.isHidden = false
+        self.orderNoLbl.isHidden = false
+        self.telBtn.isHidden = false
+        self.orderEstimateLbl.isHidden = false
+        self.timeLbl.isHidden = false
+        self.telBtn.isHidden = false
+        self.arrivalBtn.isHidden = true
+        self.cusAddressLTxt.isHidden = false
+        self.cusNameLbl.isHidden = false
+        self.tableView.reloadData()
         self.cusNameLbl.text = order?.customer.cus_name
         self.cusAddressLTxt.text = order?.order_address
         self.orderNoLbl.text = "รายละเอียดออร์เดอร์ เลขที่ \((order?.order_id)!)"
-        //var index1 = order?.order_estimate_datetime.index((order?.order_estimate_datetime.endIndex)!, offsetBy: -8)
-        //var substring1 = order?.order_estimate_datetime.substring(from: index1!)
-        let comps = NSDateComponents()
+        self.orderEstimateLbl.text = self.order?.order_estimate_datetime.convertTime()
+    }
+    
+    func initValueForBackToStation(){
+        self.tableView.isHidden = true
+        self.orderNoLbl.isHidden = true
+        self.orderEstimateLbl.isHidden = true
+        self.telBtn.isHidden = true
+        self.timeLbl.isHidden = false
+        self.telBtn.isHidden = true
+        self.arrivalBtn.isHidden = false
+        self.cusAddressLTxt.isHidden = true
+        self.cusNameLbl.isHidden = false
+        let defaults = UserDefaults.standard
+        let name = defaults.value(forKey: FULLNAME_KEY) as! String
+        self.cusNameLbl.text = "สวัสดีคุณ \(name)"
+        self.timeLbl.text = "กรุณากลับจุดจอด \(GlobalVariables.sharedManager.curBikeStation.bike_station_name)"
         
-        comps.hour = 7
-        var orderEstimatedDateTime = self.order?.order_estimate_datetime
-        let dateFormatter = DateFormatter()
-        dateFormatter.dateFormat = "yyyy-MM-dd HH:mm:ss"
-        dateFormatter.locale = NSLocale.current
-        let cal = NSCalendar.current
-        var date = dateFormatter.date(from: (self.order?.order_estimate_datetime)!)
-        let r = cal.date(byAdding: comps as DateComponents, to: date!)
-        let str = dateFormatter.string(from: r!)
+    }
+    
+    func initValueAvailable(){
         
-        self.orderEstimateLbl.text = str
+        self.tableView.isHidden = true
+        self.orderNoLbl.isHidden = true
+        self.orderEstimateLbl.isHidden = true
+        self.telBtn.isHidden = true
+        self.timeLbl.isHidden = false
+        self.telBtn.isHidden = true
+        self.arrivalBtn.isHidden = true
+        self.cusAddressLTxt.isHidden = true
+        self.cusNameLbl.isHidden = false
+        let defaults = UserDefaults.standard
+        let name = defaults.value(forKey: FULLNAME_KEY) as! String
+        self.cusNameLbl.text = "สวัสดีคุณ \(name)"
+        self.timeLbl.text = "คุณอยู่ที่จุดจอด \(GlobalVariables.sharedManager.curBikeStation.bike_station_name)"
+        
     }
     
     @IBAction func callCustomer(){
@@ -118,6 +168,30 @@ class HomeViewController: BaseViewController, GMSMapViewDelegate {
         // Dispose of any resources that can be recreated.
     }
     
+    @IBAction func arrivedStation(){
+        let defaults = UserDefaults.standard
+        let fullId = defaults.value(forKey: FULLID_KEY) as! Int
+        let alert = UIAlertController(title: "รายงานจุดจอด", message: "คุณถึงจุดจอด \(GlobalVariables.sharedManager.curBikeStation.bike_station_name) เรียบร้อยแล้ว?" , preferredStyle: UIAlertControllerStyle.alert)
+        
+        alert.addAction(UIAlertAction(title: "ยกเลิก", style: UIAlertActionStyle.default, handler: nil))
+        alert.addAction(UIAlertAction(title: "ยืนยัน", style: UIAlertActionStyle.default, handler: { action in
+            Alamofire.request(BASEURL+BACKTOSTATION+"\(fullId)")
+                .responseJSON { response in
+                    print("Response \(response)")
+                    if let jsonResult = response.result.value {
+                        if let navController = self.navigationController {
+                            navController.popViewController(animated: true)
+                        }
+                    }
+            }
+            
+            
+        }))
+        self.present(alert, animated: true, completion: nil)
+        
+        
+    }
+
 
     /*
     // MARK: - Navigation

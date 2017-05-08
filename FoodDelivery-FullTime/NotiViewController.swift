@@ -32,11 +32,11 @@ class NotiViewController: UIViewController {
     
     func getNotiList(){
         let defaults = UserDefaults.standard
-        let fullId = defaults.value(forKey: FULLID_KEY) as! String
+        let fullId = defaults.value(forKey: FULLID_KEY) as! Int
         
        
         let  value  = ["noti_type" : NOTI_TYPE_MESS ,
-                        "noti_ref_id" : fullId]
+                        "noti_ref_id" : fullId] as [String : Any]
         
         Alamofire.request(BASEURL+GETNOTILIST,method: .post, parameters: value, encoding: JSONEncoding.default, headers: header)
             .responseJSON { response in

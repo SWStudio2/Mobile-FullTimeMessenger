@@ -37,11 +37,9 @@
                                     <constraint firstAttribute="width" secondItem="0YD-2Z-3CT" secondAttribute="height" multiplier="305:156" id="smR-mz-R6s"/>
                                 </constraints>
                             </imageView>
-                            <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" misplaced="YES" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="อีเมล์" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="BhH-Yt-KyE">
+                            <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="อีเมล์" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="BhH-Yt-KyE">
                                 <rect key="frame" x="35" y="301" width="305" height="30"/>
-                                <constraints>
-                                    <constraint firstAttribute="width" secondItem="BhH-Yt-KyE" secondAttribute="height" multiplier="61:6" id="8cD-SK-k5q"/>
-                                </constraints>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <nil key="textColor"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                 <textInputTraits key="textInputTraits"/>
@@ -64,11 +62,8 @@
                         <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                         <constraints>
                             <constraint firstItem="0YD-2Z-3CT" firstAttribute="top" secondItem="5Yk-7w-bQh" secondAttribute="bottom" constant="40" id="0NO-Lx-814"/>
-                            <constraint firstItem="BhH-Yt-KyE" firstAttribute="leading" secondItem="BXz-gt-1Bz" secondAttribute="leading" constant="19" id="EYN-Yf-YVp"/>
                             <constraint firstAttribute="trailingMargin" secondItem="0YD-2Z-3CT" secondAttribute="trailing" constant="19" id="TRR-jW-IdE"/>
-                            <constraint firstAttribute="trailing" secondItem="BhH-Yt-KyE" secondAttribute="trailing" constant="19" id="osJ-8X-SqN"/>
                             <constraint firstItem="0YD-2Z-3CT" firstAttribute="leading" secondItem="BXz-gt-1Bz" secondAttribute="leadingMargin" constant="19" id="vUW-j2-Rm1"/>
-                            <constraint firstItem="BhH-Yt-KyE" firstAttribute="top" secondItem="0YD-2Z-3CT" secondAttribute="bottom" constant="41" id="whF-sz-qKp"/>
                         </constraints>
                     </view>
                     <navigationItem key="navigationItem" title="เข้าสู่ระบบ" id="KaV-jQ-Kwx"/>
@@ -122,7 +117,7 @@
                                         <textInputTraits key="textInputTraits" autocapitalizationType="sentences"/>
                                     </textView>
                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="ต้องถึงภายในเวลา " textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="5yi-qx-xQT">
-                                        <rect key="frame" x="16" y="83" width="135" height="21"/>
+                                        <rect key="frame" x="16" y="83" width="259" height="21"/>
                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                         <fontDescription key="fontDescription" type="system" weight="semibold" pointSize="17"/>
                                         <color key="textColor" red="0.37254901959999998" green="0.49019607840000001" blue="0.54117647059999996" alpha="1" colorSpace="calibratedRGB"/>
@@ -281,16 +276,27 @@
                                 <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                 <nil key="highlightedColor"/>
                             </label>
+                            <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Q3F-in-blC">
+                                <rect key="frame" x="0.0" y="629" width="375" height="38"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <color key="backgroundColor" red="0.37254901959999998" green="0.49019607840000001" blue="0.54117647059999996" alpha="1" colorSpace="calibratedRGB"/>
+                                <state key="normal" title="ถึงจุดจอดแล้ว">
+                                    <color key="titleColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                </state>
+                            </button>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                     </view>
                     <navigationItem key="navigationItem" title="งานที่ได้รับมอบหมาย" id="0a2-uW-pc0"/>
                     <connections>
+                        <outlet property="arrivalBtn" destination="Q3F-in-blC" id="SP8-0R-SeH"/>
                         <outlet property="cusAddressLTxt" destination="K7f-0d-OAv" id="p1m-lT-nag"/>
                         <outlet property="cusNameLbl" destination="1sl-49-fPh" id="kMA-dx-Bc1"/>
                         <outlet property="orderEstimateLbl" destination="266-5V-kyH" id="Ywd-Ke-5hw"/>
                         <outlet property="orderNoLbl" destination="tcz-Rf-NUD" id="Hfg-iY-xDL"/>
                         <outlet property="tableView" destination="PkC-8Q-RSK" id="Wlp-le-1yd"/>
+                        <outlet property="telBtn" destination="UIh-ea-851" id="lSI-hS-P1k"/>
+                        <outlet property="timeLbl" destination="5yi-qx-xQT" id="3hQ-1z-QAJ"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="zd1-hM-E1f" userLabel="First Responder" sceneMemberID="firstResponder"/>
@@ -310,7 +316,7 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="84" sectionHeaderHeight="28" sectionFooterHeight="28" translatesAutoresizingMaskIntoConstraints="NO" id="i6B-pn-TgC">
-                                <rect key="frame" x="0.0" y="64" width="375" height="603"/>
+                                <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                 <prototypes>
                                     <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" reuseIdentifier="notiTableViewCell" rowHeight="84" id="lWL-YH-LbP" customClass="NotiTableViewCell" customModule="FoodDelivery_FullTime" customModuleProvider="target">
@@ -375,7 +381,7 @@
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                         <constraints>
                             <constraint firstAttribute="trailing" secondItem="i6B-pn-TgC" secondAttribute="trailing" id="Ajt-Gz-Rpi"/>
-                            <constraint firstItem="i6B-pn-TgC" firstAttribute="top" secondItem="6CH-s1-ud2" secondAttribute="bottom" id="WMT-MV-17q"/>
+                            <constraint firstItem="i6B-pn-TgC" firstAttribute="top" secondItem="6CH-s1-ud2" secondAttribute="bottom" constant="-64" id="WMT-MV-17q"/>
                             <constraint firstItem="J7a-14-MQd" firstAttribute="top" secondItem="i6B-pn-TgC" secondAttribute="bottom" id="XaK-nu-rSI"/>
                             <constraint firstItem="i6B-pn-TgC" firstAttribute="leading" secondItem="aBm-Ax-kxd" secondAttribute="leading" id="sUI-yj-66s"/>
                         </constraints>
@@ -601,7 +607,7 @@
                                 <nil key="highlightedColor"/>
                             </label>
                             <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" fixedFrame="YES" text="Address" textAlignment="natural" translatesAutoresizingMaskIntoConstraints="NO" id="OOB-h9-0Dy">
-                                <rect key="frame" x="114" y="106" width="252" height="52"/>
+                                <rect key="frame" x="114" y="106" width="252" height="72"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="14"/>
@@ -648,7 +654,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="nzu-39-VzP" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="3162" y="134"/>
+            <point key="canvasLocation" x="3160.8000000000002" y="133.5832083958021"/>
         </scene>
         <!--Customer View Controller-->
         <scene sceneID="nSg-7l-DxT">
@@ -814,7 +820,7 @@
         <!--Station View Controller-->
         <scene sceneID="SjC-10-gM8">
             <objects>
-                <viewController id="DcG-3J-RIA" customClass="StationViewController" customModule="FoodDelivery_FullTime" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="StationViewController" useStoryboardIdentifierAsRestorationIdentifier="YES" id="DcG-3J-RIA" customClass="StationViewController" customModule="FoodDelivery_FullTime" customModuleProvider="target" sceneMemberID="viewController">
                     <layoutGuides>
                         <viewControllerLayoutGuide type="top" id="NpJ-Rq-sOo"/>
                         <viewControllerLayoutGuide type="bottom" id="RbF-0F-b7A"/>
@@ -856,6 +862,7 @@
                     </view>
                     <simulatedNavigationBarMetrics key="simulatedTopBarMetrics" prompted="NO"/>
                     <connections>
+                        <outlet property="backBtn" destination="V8Y-3g-MWg" id="BFN-gi-ewv"/>
                         <outlet property="mapView" destination="Vlo-JT-uDe" id="yqX-QQ-FPC"/>
                         <outlet property="stationNameLbl" destination="YuS-7I-52E" id="KyZ-7A-LJ4"/>
                     </connections>
@@ -869,7 +876,7 @@
             <objects>
                 <navigationController storyboardIdentifier="HomeNavigationController" automaticallyAdjustsScrollViewInsets="NO" useStoryboardIdentifierAsRestorationIdentifier="YES" id="IR3-2m-jgl" sceneMemberID="viewController">
                     <toolbarItems/>
-                    <navigationBar key="navigationBar" contentMode="scaleToFill" misplaced="YES" id="a9U-Ql-thl">
+                    <navigationBar key="navigationBar" contentMode="scaleToFill" id="a9U-Ql-thl">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="44"/>
                         <autoresizingMask key="autoresizingMask"/>
                         <color key="tintColor" white="1" alpha="1" colorSpace="calibratedWhite"/>

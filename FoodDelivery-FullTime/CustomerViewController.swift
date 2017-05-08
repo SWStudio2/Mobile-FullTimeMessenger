@@ -92,10 +92,10 @@ class CustomerViewController: UIViewController {
         
         let value = ["mer_id": merList,
                      "order_id": Int64.init(GlobalVariables.sharedManager.curOrder.order_id),
-                     "full_id" : Int64.init(defaults.value(forKey: FULLID_KEY) as! String),
-                     "order_confirm_code" : self.confirmTxt.text] as [String : Any]
+                     "full_id" : defaults.value(forKey: FULLID_KEY) as! Int,
+                     "seqor_confirm_code" : (self.confirmTxt!.text)!] as [String : Any]
         
-        
+        print("value \(value)")
         Alamofire.request(BASEURL+VERIFYCONFIRM_CUS,method: .post, parameters: value, encoding: JSONEncoding.default, headers: header)
             .responseJSON { response in
                 
@@ -122,10 +122,14 @@ class CustomerViewController: UIViewController {
     
     func validationConfirmCodePass(recommendStationDict:NSDictionary){
         let recommendStation = BikeStation.init(json: recommendStationDict)
+        GlobalVariables.sharedManager.recommendBikeStation = recommendStation
+        GlobalVariables.sharedManager.curBikeStation = recommendStation
         let alert = UIAlertController(title: "ตรวจสอบ Confirm Code", message: "ส่งอาหารถึงลูกค้า คุณ\((order?.customer.cus_name)!) เรียบร้อยแล้ว \r\n กรุณาเดินทางกลับจุดจอด \(recommendStation.bike_station_name)" , preferredStyle: UIAlertControllerStyle.alert)
         alert.addAction(UIAlertAction(title: "ตกลง", style: UIAlertActionStyle.default, handler: { action in
             self.order?.order_status_id = ORDER_DELIVERING_STATUS
+            GlobalVariables.sharedManager.fullStatusId = MESSENGER_DELIVERIED_STATUS
             if let navController = self.navigationController {
+                
                 navController.popViewController(animated: true)
             }
             

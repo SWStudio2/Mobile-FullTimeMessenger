@@ -47,13 +47,6 @@ class MapViewController: BaseViewController, GMSMapViewDelegate{
         var preOrder:SeqOrder? = nil
         var markers:[GMSMarker] = []
         
-        // Current Loc
-        /*
-        let marker = GMSMarker()
-        let curLoc = GlobalVariables.sharedManager.currentLocation
-        let mesLat = (curLoc?.latitude)!
-        let mesLong = (curLoc?.longitude)!
-        */
         // Bike STation
         let station = GlobalVariables.sharedManager.curBikeStation
         let stationMarker = GMSMarker()
@@ -176,6 +169,62 @@ class MapViewController: BaseViewController, GMSMapViewDelegate{
         mapView.animate(with: GMSCameraUpdate.fit(bounds))*/
     }
     
+    func setupBikePin(){
+        let defaults = UserDefaults.standard
+        let fullStatusId = GlobalVariables.sharedManager.fullStatusId
+        var markers:[GMSMarker] = []
+        var recommendBikeStation = GlobalVariables.sharedManager.recommendBikeStation
+        if recommendBikeStation.bike_station_id == 0 {
+            recommendBikeStation = GlobalVariables.sharedManager.curBikeStation
+        }
+         // Station
+         if recommendBikeStation != nil {
+            let stationMarker = GMSMarker()
+            stationMarker.title = "Stop 1"
+            let stationLat = Double.init(recommendBikeStation.bike_station_latitude)!
+            let stationLong = Double.init(recommendBikeStation.bike_station_longitude)!
+            stationMarker.position = CLLocationCoordinate2DMake(stationLat, stationLong)
+            stationMarker.map = mapView
+         
+         
+            let imageViewStation = UIImageView(frame: CGRect(x: 0, y: 0, width: 30, height: 30))
+            imageViewStation.image = UIImage(named: "flag_2_filled")
+            imageViewStation.contentMode = UIViewContentMode.scaleAspectFit
+            stationMarker.iconView = imageViewStation
+            stationMarker.userData = [ISMER_KEY : false, STATION_KEY : recommendBikeStation]
+            markers.append(stationMarker)
+            if fullStatusId == MESSENGER_DELIVERIED_STATUS {
+                
+            
+                let curOrder = GlobalVariables.sharedManager.curOrder
+                var lat = ""
+                var long = ""
+                if curOrder.order_id == 0 {
+                    lat = String.init((GlobalVariables.sharedManager.currentLocation?.latitude)!)
+                    long = String.init((GlobalVariables.sharedManager.currentLocation?.longitude)!)
+                }else{
+                    lat = curOrder.order_address_latitude
+                    long = curOrder.order_address_longtitude
+                }
+                let curMarker = GMSMarker()
+                curMarker.position = CLLocationCoordinate2DMake(Double.init(lat)!, Double.init(long)!)
+                curMarker.map = mapView
+                let curLoc = UIImageView(frame: CGRect(x: 0, y: 0, width: 30, height: 30))
+                curLoc.image = UIImage(named: "icons8-motorcycle_filled")
+                curLoc.contentMode = UIViewContentMode.scaleAspectFit
+                curMarker.iconView = curLoc
+                //curMarker.userData = [ISMER_KEY : false, STATION_KEY : recommendBikeStation]
+                markers.append(curMarker)
+                
+                self.googleApi(preLatitude: "\(lat)", preLongitude: "\(long)", postLatitude: "\(stationLat)", postLongitude: "\(stationLong)")
+            }
+         
+            
+        }
+        self.fitAllMarkers(markers: markers)
+    }
+
+    
     func resetMap(){
         self.mapView.clear()
         
@@ -188,57 +237,68 @@ class MapViewController: BaseViewController, GMSMapViewDelegate{
        // var infoWindow = UIView.init(frame: CGRect(x: 0, y: 0, width: 50, height: 50))
         let infoWindow = Bundle.main.loadNibNamed("CustomInfoWindow", owner: self, options: nil)?.first as! CustomInfoWindow
         
-        let data = marker.userData as! NSDictionary
-        let isMer = data[ISMER_KEY] as! Bool
-        if isMer {
-            infoWindow.merName.text = (data[SEQORDER_KEY] as! SeqOrder).merchant.merName
-            infoWindow.typeLbl.text = MERCHANT
-            if (data[SEQORDER_KEY] as! SeqOrder).seqor_receive_status_id == MERCHANT_RECEIVED_STATUS {
-                infoWindow.headerView.backgroundColor = GREEN
-            }else{
-                infoWindow.headerView.backgroundColor = ORANGE
+        
+        if marker.userData != nil {
+            let data = marker.userData as! NSDictionary
+            let isMer = data[ISMER_KEY] as! Bool
+            if isMer {
+                infoWindow.merName.text = (data[SEQORDER_KEY] as! SeqOrder).merchant.merName
+                infoWindow.typeLbl.text = MERCHANT
+                if (data[SEQORDER_KEY] as! SeqOrder).seqor_receive_status_id == MERCHANT_RECEIVED_STATUS {
+                    infoWindow.headerView.backgroundColor = GREEN
+                }else{
+                    infoWindow.headerView.backgroundColor = ORANGE
+                }
+            }else {
+                if data[ORDER_KEY] != nil {
+                    infoWindow.merName.text = (data[ORDER_KEY] as! Order).customer.cus_name
+                    infoWindow.typeLbl.text = CUSTOMER
+                }else{
+               // infoWindow.detailImg.isHidden = true
+                    infoWindow.merName.text = (data[STATION_KEY] as! BikeStation).bike_station_name
+                    infoWindow.typeLbl.text = STATION
+                }
             }
-        }else {
-            if data[ORDER_KEY] != nil {
-                infoWindow.merName.text = (data[ORDER_KEY] as! Order).customer.cus_name
-                infoWindow.typeLbl.text = CUSTOMER
-            }else{
-                infoWindow.detailImg.isHidden = true
-                infoWindow.merName.text = (data[STATION_KEY] as! BikeStation).bike_station_name
-                infoWindow.typeLbl.text = STATION
-            }
+        } else {
+            infoWindow.typeLbl.text = ""
+            infoWindow.merName.text = "คุณอยู่ที่นี่"
+            infoWindow.merName.textAlignment = .center
+            infoWindow.detailImg.isHidden = true
         }
         infoWindow.layer.cornerRadius = 20.0
         return infoWindow
     }
     
     func mapView(_ mapView: GMSMapView, didTapInfoWindowOf marker: GMSMarker) {
-        let data = marker.userData as! NSDictionary
-        let isMer = data[ISMER_KEY] as! Bool
-        if isMer {
-            if let viewController = UIStoryboard(name: "Main", bundle: nil).instantiateViewController(withIdentifier: "OrderPerMerchantViewController") as? OrderPerMerchantViewController {
-                if let navigator = navigationController {
-                    navigator.pushViewController(viewController, animated: true)
-                    viewController.deliveryRate = rate
-                    viewController.order = (data[SEQORDER_KEY]  as! SeqOrder)
-                }
-            }
-        }else {
-            if data[ORDER_KEY] != nil {
-                if let viewController = UIStoryboard(name: "Main", bundle: nil).instantiateViewController(withIdentifier: "CustomerViewController") as? CustomerViewController {
+        
+        if marker.userData != nil {
+            let data = marker.userData as! NSDictionary
+            let isMer = data[ISMER_KEY] as! Bool
+            if isMer {
+                if let viewController = UIStoryboard(name: "Main", bundle: nil).instantiateViewController(withIdentifier:   "OrderPerMerchantViewController") as? OrderPerMerchantViewController {
                     if let navigator = navigationController {
                         navigator.pushViewController(viewController, animated: true)
-                        viewController.order = (data[ORDER_KEY]  as! Order)
+                        viewController.deliveryRate = rate
+                        viewController.order = (data[SEQORDER_KEY]  as! SeqOrder)
                     }
                 }
-            }else{
-                /*
-                if let viewController = UIStoryboard(name: "Main", bundle: nil).instantiateViewController(withIdentifier: "StationViewController") as? StationViewController {
-                    if let navigator = navigationController {
-                        navigator.pushViewController(viewController, animated: true)
-                        viewController.station = (data[STATION_KEY]  as! BikeStation)
+            }else {
+                if data[ORDER_KEY] != nil {
+                    if let viewController = UIStoryboard(name: "Main", bundle: nil).instantiateViewController(withIdentifier: "CustomerViewController") as? CustomerViewController {
+                        if let navigator = navigationController {
+                            navigator.pushViewController(viewController, animated: true)
+                            viewController.order = (data[ORDER_KEY]  as! Order)
+                        }
                     }
-                }*/
+                }else{
+                
+                    if let viewController = UIStoryboard(name: "Main", bundle: nil).instantiateViewController(withIdentifier: "StationViewController") as? StationViewController {
+                        if let navigator = navigationController {
+                            navigator.pushViewController(viewController, animated: true)
+                            viewController.station = (data[STATION_KEY]  as! BikeStation)
+                        }
+                    }
+                }
             }
         }
     }
@@ -250,7 +310,7 @@ class MapViewController: BaseViewController, GMSMapViewDelegate{
         {
             bounds = bounds.includingCoordinate(marker.position)
         }
-        mapView.animate(toZoom: 10)
+        mapView.animate(toZoom: 25)
         mapView.animate(with: GMSCameraUpdate.fit(bounds))
         
     }
@@ -284,11 +344,12 @@ class MapViewController: BaseViewController, GMSMapViewDelegate{
     }
     
     func getMapList(){
-        
+        let defaults = UserDefaults.standard
+        let fullStatusId = GlobalVariables.sharedManager.fullStatusId
         let order = GlobalVariables.sharedManager.curOrder
         order.seqOrders = order.seqOrders.sorted { $0.seqor_sort < $1.seqor_sort }
-        if order.order_status_id == ORDER_RECEIVED_STATUS {
-            
+        if fullStatusId == MESSENGER_DELIVERIED_STATUS || fullStatusId == MESSENGER_STATION_STATUS {
+            self.setupBikePin()
         }else{
             self.setupPin(order: order)
         }
